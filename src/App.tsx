@@ -12,17 +12,18 @@ declare const _brand: unique symbol
 
 type Brand<K, T> = K & { [_brand]: T }
 
-type ParamId = Brand<number, 'ParamId'>
+export type ParamId = Brand<number, 'ParamId'>
 
-enum ParamType {
+// eslint-disable-next-line react-refresh/only-export-components
+export enum ParamType {
   string = 'string',
   select = 'select',
   number = 'number',
 }
 
-type SelectValue = { value: string; label: string }
+export type SelectValue = { value: string; label: string }
 
-type Param =
+export type Param =
   | { id: ParamId; name: string; type: ParamType.string }
   | {
       id: ParamId
@@ -32,16 +33,16 @@ type Param =
     }
   | { id: ParamId; name: string; type: ParamType.number }
 
-type ParamValue =
+export type ParamValue =
   | { paramId: ParamId; type: ParamType.string; value: string }
   | { paramId: ParamId; type: ParamType.select; value: SelectValue }
   | { paramId: ParamId; type: ParamType.number; value: number }
 
-interface Model {
+export interface Model {
   paramValues: ParamValue[]
 }
 
-interface ParamsEditorProps {
+export interface ParamsEditorProps {
   params: Param[]
   model: Model
 }
@@ -80,11 +81,12 @@ interface ParamFieldsProps {
 
 type GetModelFn = () => Model
 
-const createParamId = (id: number) => {
+// eslint-disable-next-line react-refresh/only-export-components
+export const createParamId = (id: number) => {
   return id as ParamId
 }
 
-const ParamsEditor = forwardRef(
+export const ParamsEditor = forwardRef(
   ({ params, model: _model }: ParamsEditorProps, ref) => {
     const [model, setModel] = useState(_model)
 
