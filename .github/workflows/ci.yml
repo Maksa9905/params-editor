@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Установка pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Использование Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Установка зависимостей
+        run: pnpm install --frozen-lockfile
+
+      - name: Линтинг
+        run: pnpm lint
+
+      - name: Проверка типов
+        run: pnpm type-check
+
+      - name: Запуск тестов
+        run: pnpm test:run
+
+      - name: Создание отчета о покрытии
+        run: pnpm test:coverage
+
+      - name: Загрузка отчета о покрытии
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
